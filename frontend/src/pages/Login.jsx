@@ -26,11 +26,46 @@ const Login = () => {
     }
   };
 
+  const handleDemoLogin = async (demoEmail, demoPassword) => {
+    setError('');
+    try {
+      const resUser = await login(demoEmail, demoPassword);
+      navigate(resUser.role === 'RESOLVER' ? '/resolver' : '/reporter');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Login failed. Did you seed the database?');
+    }
+  };
+
   return (
     <div className="container">
       <div className="card">
         <h2>Login</h2>
         {error && <div className="error">{error}</div>}
+        
+        {/* Evaluator Buttons */}
+        <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
+          <button 
+            type="button" 
+            className="btn-primary" 
+            style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}
+            onClick={() => handleDemoLogin('reporter@example.com', 'password123')}
+          >
+            Auto-Login Reporter
+          </button>
+          <button 
+            type="button" 
+            className="btn-primary" 
+            style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)' }}
+            onClick={() => handleDemoLogin('resolver@example.com', 'password123')}
+          >
+            Auto-Login Resolver
+          </button>
+        </div>
+
+        <div style={{ textAlign: 'center', marginBottom: '1.5rem', color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: '500' }}>
+          — OR SIGN IN MANUALLY —
+        </div>
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Email</label>
